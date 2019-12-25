@@ -24,7 +24,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build("nu18de29/my-app")
+                    dockerImage = docker.build("rootex/my-app")
                 }
             }
         }
