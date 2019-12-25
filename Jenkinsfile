@@ -1,11 +1,17 @@
 pipeline {
   agent any
+  tools {
+      maven 'apache-maven-3.3.9'
+      jdk 'jdk8'
+  }
   stages {
     stage('Build') {
       steps {
-        sh '''withMaven(mavenOpts: MAVEN_OPTS, maven: \'M3\', mavenLocalRepo: MAVEN_LOCAL_REPOSITORY, mavenSettingsConfig: MAVEN_SETTINGS) {
-    sh "mvn ..."
-}'''
+        sh 'printenv'
+                withMaven(mavenSettingsConfig: 'maven-settings-global') {
+                    sh 'mvn clean package'
+                }
+          }
         }
       }
 
