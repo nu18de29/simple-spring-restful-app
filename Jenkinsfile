@@ -3,55 +3,54 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''def mvn_version = \'M3\'
-withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
-  //sh "mvn clean package"
+        sh '''withMaven(mavenOpts: MAVEN_OPTS, maven: \'M3\', mavenLocalRepo: MAVEN_LOCAL_REPOSITORY, mavenSettingsConfig: MAVEN_SETTINGS) {
+    sh "mvn ..."
 }'''
-      }
-    }
-
-    stage('Test') {
-      post {
-        always {
-          junit 'target/surefire-reports/*.xml'
         }
-
       }
-      steps {
-        sh 'mvn test'
-      }
-    }
 
-    stage('Build image') {
-      steps {
-        script {
-          dockerImage = docker.build("phayao/my-app")
+      stage('Test') {
+        post {
+          always {
+            junit 'target/surefire-reports/*.xml'
+          }
+
         }
-
+        steps {
+          sh 'mvn test'
+        }
       }
-    }
 
-    stage('Push image') {
-      steps {
-        script {
-          withDockerRegistry(
-            credentialsId: 'docker-credential',
-            url: 'https://index.docker.io/v1/') {
-              dockerImage.push()
-            }
+      stage('Build image') {
+        steps {
+          script {
+            dockerImage = docker.build("phayao/my-app")
           }
 
         }
       }
 
-      stage('Deployment') {
+      stage('Push image') {
         steps {
-          sh 'kubectl apply -f deployment.yml'
-        }
-      }
+          script {
+            withDockerRegistry(
+              credentialsId: 'docker-credential',
+              url: 'https://index.docker.io/v1/') {
+                dockerImage.push()
+              }
+            }
 
+          }
+        }
+
+        stage('Deployment') {
+          steps {
+            sh 'kubectl apply -f deployment.yml'
+          }
+        }
+
+      }
+      environment {
+        dockerImage = ''
+      }
     }
-    environment {
-      dockerImage = ''
-    }
-  }
