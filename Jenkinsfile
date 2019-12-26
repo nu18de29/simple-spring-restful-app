@@ -1,8 +1,6 @@
 pipeline {
     agent any
     environment {
-	my-image = "rootex/my-app"
-	registryCredential = 'docker-credential'
         dockerImage = ''
     }
 	
@@ -25,7 +23,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-			dockerImage = docker.build("my-image:${env.BUILD_ID}")
+			dockerImage = docker.build("rootex/my-app:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -40,11 +38,6 @@ pipeline {
                 }
             }
         }
-	stage('Remove Unused docker image') {
-	    steps{
-		sh "docker rmi $my-image:${env.BUILD_ID}"
-	    }
-	}
         stage('Deployment') {
             steps {
                 sh 'kubectl apply -f deployment.yml';
