@@ -30,12 +30,12 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
-                  withRegistry(
-			credentialsId: 'docker-credential',
+                    withDockerRegistry(
+                        credentialsId: 'docker-credential',
                         url: 'https://index.docker.io/v1/') {
-			dockerImage.push("$env.BUILD_NUMBER")
+                        dockerImage.push("$env.BUILD_NUMBER")
 			dockerImage.push("latest")
-		    } 
+                    }
                 }
             }
         }
