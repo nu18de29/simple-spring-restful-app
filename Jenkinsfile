@@ -33,7 +33,8 @@ pipeline {
                   withRegistry(
 			credentialsId: 'docker-credential',
                         url: 'https://index.docker.io/v1/') {
-			dockerImage.push()
+			dockerImage.push("$env.BUILD_NUMBER")
+			dockerImage.push("latest")
 		    } 
                 }
             }
