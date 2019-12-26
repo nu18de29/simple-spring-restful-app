@@ -6,12 +6,6 @@ pipeline {
         dockerImage = ''
     }
 	agent any
-	stages {
-    stage('Cloning Git') {
-      steps {
-        git 'https://github.com/nu18de29/simple-spring-restful-app.git'
-      }
-    }
     stages {
         stage('Build') {
             steps {
