@@ -1,8 +1,8 @@
 pipeline {
-	agent any
+    agent any
     environment {
-		registry = "rootex/my-app"
-		registryCredential = 'docker-credential'
+	registry = "rootex/my-app"
+	registryCredential = 'docker-credential'
         dockerImage = ''
     }
 	
@@ -25,7 +25,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-		    docker.build registry + ":$BUILD_NUMBER"
+			dockerImage = docker.build("registry:${BUILD_NUMBER}")
                 }
             }
         }
