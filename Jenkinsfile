@@ -25,25 +25,26 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-					docker.build registry + ":$BUILD_NUMBER"
+		    docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
         stage('Push image') {
             steps {
                 script {
-                  docker.withRegistry(credentialsId: 'docker-credential',
+                  withRegistry(
+			credentialsId: 'docker-credential',
                         url: 'https://index.docker.io/v1/') {
-					dockerImage.push()
-					} 
+			dockerImage.push()
+		    } 
                 }
             }
         }
-		stage('Remove Unused docker image') {
-			steps{
-				sh "docker rmi $registry:$BUILD_NUMBER"
-			}
-		}
+	stage('Remove Unused docker image') {
+	    steps{
+		sh "docker rmi $registry:$BUILD_NUMBER"
+	    }
+	}
         stage('Deployment') {
             steps {
                 sh 'kubectl apply -f deployment.yml';
