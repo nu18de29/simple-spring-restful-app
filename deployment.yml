@@ -29,6 +29,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: phayao/my-app
+        image: rootex/my-app
         ports:
         - containerPort: 80
