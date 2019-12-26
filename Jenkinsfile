@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-	registry = "rootex/my-app"
+	my-image = "rootex/my-app"
 	registryCredential = 'docker-credential'
         dockerImage = ''
     }
@@ -25,7 +25,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-			dockerImage = docker.build("registry:${BUILD_NUMBER}")
+			dockerImage = docker.build("my-image:${env.BUILD_ID}")
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
         }
 	stage('Remove Unused docker image') {
 	    steps{
-		sh "docker rmi $registry:$BUILD_NUMBER"
+		sh "docker rmi $my-image:${env.BUILD_ID}"
 	    }
 	}
         stage('Deployment') {
