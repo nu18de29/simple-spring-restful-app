@@ -1,11 +1,11 @@
 pipeline {
-
+	agent any
     environment {
 		registry = "rootex/my-app"
 		registryCredential = 'docker-credential'
         dockerImage = ''
     }
-	agent any
+	
     stages {
         stage('Build') {
             steps {
@@ -25,17 +25,17 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    //dockerImage = docker.build("rootex/my-app")
-			docker.build registry + ":$BUILD_NUMBER"
-                	}
-            	}
+		docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
         }
         stage('Push image') {
             steps {
                 script {
-                  docker.withRegistry( '', registryCredential ) {
+                  docker.withRegistry(credentialsId: 'docker-credential',
+                        url: 'https://index.docker.io/v1/') {
 			dockerImage.push()
-			} 
+					} 
                 }
             }
         }
