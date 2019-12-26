@@ -29,6 +29,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: rootex/my-app
+        image: rootex/my-app:latest
         ports:
         - containerPort: 80
