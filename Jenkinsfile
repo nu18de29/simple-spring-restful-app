@@ -1,10 +1,17 @@
 pipeline {
-    agent any
 
     environment {
+		registry = "rootex/my-app"
+		registryCredential = 'docker-credential'
         dockerImage = ''
     }
-
+	agent any
+	stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/nu18de29/simple-spring-restful-app.git'
+      }
+    }
     stages {
         stage('Build') {
             steps {
@@ -24,18 +31,17 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build("rootex/my-app")
+                    //dockerImage = docker.build("rootex/my-app")
+					docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
         stage('Push image') {
             steps {
                 script {
-                    withDockerRegistry(
-                        credentialsId: 'docker-credential',
-                        url: 'https://index.docker.io/v1/') {
-                        dockerImage.push()
-                    }
+                  docker.withRegistry( '', registryCredential ) {
+					dockerImage.push()
+					} 
                 }
             }
         }
