@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(
-                        credentialsId: 'docker-credential',
+                        credentialsId: 'DOCKER_CREDENTIALS',
                         url: 'https://index.docker.io/v1/') {
                         dockerImage.push("$env.BUILD_NUMBER")
 			dockerImage.push("latest")
