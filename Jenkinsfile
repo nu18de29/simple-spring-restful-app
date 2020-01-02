@@ -5,11 +5,11 @@ pipeline {
     }
 	
     stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
+	stage(Maven Clean Build){
+	    def mavenHome = tool name: "Maven-3.6.3", type: "maven"    
+            def mavenCMD = "${mavenHome}/bin/mvn "
+	    sh "${mavenCMD} clean package"
+	    }    
         stage('Test') {
             steps {
                 sh 'mvn test'
